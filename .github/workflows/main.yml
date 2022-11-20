@@ -1,0 +1,19 @@
+on:
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  sync:
+    runs-on: unbuntu-latest
+    steps:
+      - name: git sync
+        env:
+          UPSTREAM_REPO: 'git@github.com:llvm/llvm-project.git'
+          UPSTREAM_BRANCH: 'main'
+          FORK_REPO: 'git@github.com:e2k-ports/llvm-project.git'
+          FORK_BRANCH: 'main'
+        run: |
+          git clone ${UPSTREAM_REPO} --branch ${UPSTREAM_BRANCH} project
+          cd project
+          git remote add fork ${FORK_REPO}
+          git push -u fork ${FORK_BRANCH}:${UPSTREAM_BRANCH}
+          
